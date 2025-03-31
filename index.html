@@ -1,14 +1,75 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
- <head>
   <meta charset="UTF-8">
   <title>Foundation Project</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <!-- <link rel="stylesheet" href="styles.css"> -->
+  <style>
+    * {
+      padding: 0;
+      background-color: gray;
+      margin: 0;
+    }
+    button {
+      font-size: 18px;
+      background-color: blue;
+      color: yellow;
+      padding: 15px;
+      margin: 10px;
+      border: 2px solid green
+      
+    }
+    
+    #choices {
+      width: 400px;
+      font-size : 18px;
+      background-color: blue;
+      padding : 10px;
+      margin : 10px;
+      color : white;
+      border: 2px solid green;
+      visibility: hidden;
+    }
+
+    #score {
+      width: 400px;
+      font-size : 18px;
+      background-color: blue;
+      padding : 10px;
+      margin : 10px;
+      color : white;
+      border: 2px solid green;
+      visibility: hidden;
+    }
+    #winner {
+      width: 400px;
+      font-size : 18px;
+      background-color: blue;
+      padding : 10px;
+      margin : 10px;
+      color : white;
+      border: 2px solid green;
+      visibility: hidden;
+    }
+
+  </style>
  </head>
  <body>
+
+  <div id="main">
+    <button id = 'rock' > Rock </button>
+    <button id = 'paper'> Paper </button>
+    <button id = 'scissors'> Scissors </button>
+  </div>
+
+  <div id="results">
+    <h3 id="choices"></h3>
+    <h3 id="score"></h3>
+    <h3 id="winner"></h3>
+  </div>
+
+ 
  <script>
  
   let  humanScore = 0;
@@ -16,53 +77,72 @@
   const maxTools = 3 ;
   const tools = ["rock", "paper", "scissors"];
   
+  choices = document.querySelector("#choices"); //h3
+  winner = document.querySelector("#winner");
+  msg = document.querySelector('#msg');    
+  cscore = document.querySelector('#score');   //ok
+ 
+  // choices.style.visibility = hidden;
+
+  main.addEventListener('click', (e) => {
+    winner.textContent = "";
+    winner.style.visibility = 'hidden';
+    // console.log(e);
+    let target = e.target;  //button
+    // console.log(target);
+   switch (target.id) {
+      case "rock" : 
+        playRound(0);
+        break;
+      case "paper" : 
+        playRound(1);
+        break;
+      case "scissors" : 
+        playRound(2);
+        break;
+      default:
+        console.log("null");
+    }
+  });
+     
   function getComputerChoice(){
   let offset=0;
-   //randomly returns rock paper or scissors
-   return(Math.floor((Math.random())*maxTools)+ offset);
+  return(Math.floor((Math.random())*maxTools)+ offset);
   }
   
-  function getHumanChoice() {
-     humanChoice=prompt("Enter Choice").toLowerCase();
-     return tools.indexOf(humanChoice);
-  }
- 
-  function playRound(humanChoice, computerChoice) 
+  function playRound(choice) 
   { 
-    console.log(humanChoice, computerChoice);
+    choices.style.visibility = 'hidden';
+    console.log(choice);
+    const computerSelection = getComputerChoice();
+    console.log( computerSelection);
 
-    if (computerChoice > humanChoice || (computerChoice === 0 && humanChoice === 2)) {
-      console.log(`you lose ${tools[computerChoice]} beats ${tools[humanChoice]}`)
+   choices.textContent = "human choice : " + `${tools[choice]} ` + ", computer choice : " + `${tools[computerSelection]}` ;
+   choices.style.visibility = 'visible';
+
+    if ((computerSelection == 0 && choice ==2) ||
+      (computerSelection == 2 && choice ==1)  ||
+      (computerSelection == 1 && choice == 0 ))
+    {
       computerScore++;   //increment computer score
     }
-    else if (computerChoice === humanChoice)
-    {
-      console.log(`its a tie ${tools[humanChoice]} and  ${tools[computerChoice]}`)
+    else if (choice !== computerSelection){
+        humanScore++;   //increment human score
     }
-    else {
-      console.log(`you win ${tools[humanChoice]} beats ${tools[computerChoice]}`)
-      humanScore++;   //increment human score
+    
+    score.textContent= `Computer: ${computerScore}, Player : ${humanScore}` ;               
+    score.style.visibility = 'visible';
+
+    if ( humanScore >= 5 || computerScore >=5 ) {
+      winner.textContent = ( humanScore > computerScore ) ? "Player wins the Game": "Computer wins the Game";
+      winner.style.visibility = 'visible';
+      computerScore = 0;
+      humanScore =0;
     }
+
+    //console.log(computerScore, humanScore);
   }
   
-  function playGame() {
-
-    for(let i = 0; i < 5 ;i++) {
-        //console.log(tools[getComputerChoice()]);
-        const humanSelection = getHumanChoice();
-        const computerSelection = getComputerChoice();
-        playRound(humanSelection, computerSelection);
-        console.log(`Your score is ${humanScore}, computer score is ${computerScore}`);
-        console.log("");
-    }
-      if (humanScore > computerScore)
-        console.log(`Game over, you win! ${humanScore} to  ${computerScore}`);
-      else 
-        console.log(`Game over, you lose! ${computerScore} to ${humanScore}`);
-  }
-
-   playGame();
-
- </script>
+  </script>
 </body>
 </html>
